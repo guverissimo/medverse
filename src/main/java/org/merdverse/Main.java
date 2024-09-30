@@ -217,6 +217,24 @@ public class Main {
 					        alunoDAO.atualizarAluno(oldMail, alnAtualizar);
 					        
     						break;
+    						
+    					case 8:
+    						helper.cleanConsole();
+    						System.out.println("Deletar um aluno");
+    						
+    						System.out.print("Digite o email do aluno: ");
+					        String emailDeletarAluno = scanner.nextLine();
+					        
+					        Aluno buscarAlunoDeletar = alunoDAO.buscarAlunoPorEmail(emailDeletarAluno);
+					        
+					        if (buscarAlunoDeletar == null) {
+					        	System.out.println("Nenhum aluno cadastrado.");
+					        	helper.loading();
+					        	break;
+					        }
+					        
+					        alunoDAO.deletarAluno(emailDeletarAluno);
+					        break;
     					case 9:
     						helper.cleanConsole();
     						System.out.println("Alterar sua senha");

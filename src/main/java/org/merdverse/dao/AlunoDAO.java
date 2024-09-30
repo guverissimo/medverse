@@ -17,7 +17,7 @@ public class AlunoDAO {
     private static final String SELECT_ALUNO_BY_EMAIL = "SELECT * FROM aluno WHERE email = ?";
     private static final String SELECT_ALL_ALUNOS = "SELECT * FROM aluno";
     private static final String UPDATE_ALUNO = "UPDATE aluno SET nome = ?, email = ?, senha = ?, data_nasc = ?, pontos = ? WHERE email = ?";
-    private static final String DELETE_ALUNO = "DELETE FROM aluno WHERE id = ?";
+    private static final String DELETE_ALUNO = "DELETE FROM aluno WHERE email = ?";
     
     public void create(Aluno aluno) {
     	try(Connection conn = ConexaoDB.getConnection();
@@ -119,6 +119,20 @@ public class AlunoDAO {
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+    
+    public void deletarAluno(String email) {
+        try (Connection conn = ConexaoDB.getConnection();
+             PreparedStatement ps = conn.prepareStatement(DELETE_ALUNO)) {
+
+            ps.setString(1, email);
+            ps.executeUpdate();
+
+            System.out.println("Aluno deletado com sucesso!");
+
+        } catch (SQLException e) {
+            System.out.println("Erro ao deletar aluno: " + e.getMessage());
         }
     }
 
