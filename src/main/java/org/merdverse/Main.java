@@ -6,6 +6,7 @@ import java.util.Scanner;
 import org.merdverse.dao.AlunoDAO;
 import org.merdverse.dao.Entrar;
 import org.merdverse.dao.ProfessorDAO;
+import org.merdverse.models.LoginResult;
 import org.merdverse.models.Professor;
 import org.merdverse.models.Usuario;
 
@@ -53,26 +54,46 @@ public class Main {
     		String senha = scanner.next();
     		scanner.nextLine(); // Limpar o buffer
     		
-            int usr = entrar.entrar(email, senha);
+    		LoginResult usr = entrar.entrar(email, senha);
+    		System.out.println(usr);
+    		if (usr != null) {
+                Usuario usuarioLogado = usr.getUsuario();
+                System.out.println("Bem-vindo, " + usuarioLogado.getNome() + "!");
 
-            switch (usr) {
-                case 0:
+                // Verifica se o usuário é um aluno ou professor com base no código
+                if (usr.getCodigo() == 0) {
                     System.out.println("Você está logado como Aluno.");
-                    logado = true; // Define que o usuário está logado
-                    break;
-                case 1:
+                } else if (usr.getCodigo() == 1) {
                     System.out.println("Você está logado como Professor.");
-                    logado = true; // Define que o usuário está logado
-                    break;
-                case 2:
-                    System.out.println("E-mail ou senha inválidos.");
-                    break;
-                case -1:
-                    System.out.println("Erro ao realizar o login. Tente novamente.");
-                    break;
-                default:
-                    System.out.println("Opção desconhecida.");
+                }
+
+                exec = false; // Sai do loop, usuário logado com sucesso
+            } else {
+                System.out.println("E-mail ou senha inválidos.");
             }
+
+//            switch (usr) {
+//                case (usr.):
+//                	// Aluno
+//                    System.out.println("Você está logado como Aluno.");
+//                    logado = true; // Define que o usuário está logado
+//                    break;
+//                case 1:
+//                    // Professor
+//                	System.out.println("Bem-vindo: " + );
+//                    logado = true; // Define que o usuário está logado
+//                    break;
+//                case 2:
+//                	// Usuário não encontrado
+//                    System.out.println("E-mail ou senha inválidos.");
+//                    break;
+//                case -1:
+//                	// Erro
+//                    System.out.println("Erro ao realizar o login. Tente novamente.");
+//                    break;
+//                default:
+//                    System.out.println("Opção desconhecida.");
+//            }
 
             // Se o usuário estiver logado, pode sair do loop ou realizar outras ações
             if (logado) {
