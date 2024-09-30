@@ -28,7 +28,7 @@ public class ConexaoDB {
 //                throw new SQLException("Usuário ou senha do banco de dados não configurados.");
 //            }
             conexao = DriverManager.getConnection(URL, "RM551244", "130203");
-            System.out.println("Conexão com o banco de dados Oracle estabelecida.");
+//            System.out.println("Conexão com o banco de dados Oracle estabelecida.");
         } catch (SQLException e) {
             System.out.println("Erro ao conectar ao banco de dados: " + e.getMessage());
         }

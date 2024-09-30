@@ -6,8 +6,12 @@ import org.merdverse.dao.ProfessorDAO;
 
 public class Professor extends Usuario{
 	int id;
-
+	
 	public Professor(String nome, String email, LocalDate dataNasc) {
+		super(nome, email, dataNasc);
+	}
+
+	public Professor(int id, String nome, String email, LocalDate dataNasc) {
 		super(nome, email, dataNasc);
 	}
 	public int getId() {

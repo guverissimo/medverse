@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import org.merdverse.models.Professor;
 
 public class ProfessorDAO {
-	private static final String INSERT_PROFESSOR = "INSERT INTO professor (nome, email, data_nasc, senha) VALUES (?, ?, ?, ?)";
+	private static final String INSERT_PROFESSOR = "INSERT INTO professor (nome_prof, email_prof, data_nasc_prof, senha_prof) VALUES (?, ?, ?, ?)";
 	
 	public void create(Professor professor) {
 		try (Connection conn = ConexaoDB.getConnection();
@@ -27,7 +27,7 @@ public class ProfessorDAO {
 	}
 	
     public void updatePassword(String email, String senha) {
-        String sql = "UPDATE professor SET senha = ? WHERE email = ?";
+        String sql = "UPDATE professor SET senha_prof = ? WHERE email_prof = ?";
 
         // Obtendo a conexão
         try (Connection conn = ConexaoDB.getConnection();

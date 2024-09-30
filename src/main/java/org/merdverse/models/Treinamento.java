@@ -1,16 +1,24 @@
 package org.merdverse.models;
 
 public class Treinamento {
-	private int id;
+	private String id;
 	private String nome;
 	private int pontos;
 	private int pontosMinimo;
-	private Professor professor;
+	private String email_professor;
 	
-	public int getId() {
+	public Treinamento (String id, String nome, int pontos, int pontosMinimo, String email_professor) {
+		setId(id);
+		setNome(nome);
+		setPontos(pontos);
+		setPontosMinimo(pontosMinimo);
+		setProfessor(email_professor);
+	}
+	
+	public String getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 	public String getNome() {
@@ -25,8 +33,8 @@ public class Treinamento {
 	public void setPontos(int pontos) {
 		this.pontos = pontos;
 	}
-	public Professor getProfessor() {
-		return professor;
+	public String getProfessor() {
+		return email_professor;
 	}
 	public int getPontosMinimo() {
 		return pontosMinimo;
@@ -34,7 +42,7 @@ public class Treinamento {
 	public void setPontosMinimo(int pontosMinimo) {
 		this.pontosMinimo = pontosMinimo;
 	}
-	public void setProfessor(Professor professor) {
-		this.professor = professor;
+	public void setProfessor(String professor) {
+		this.email_professor = professor;
 	}
 }

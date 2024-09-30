@@ -7,10 +7,13 @@ import java.util.Scanner;
 import org.merdverse.dao.AlunoDAO;
 import org.merdverse.dao.Entrar;
 import org.merdverse.dao.ProfessorDAO;
+import org.merdverse.dao.TreinamentoDAO;
 import org.merdverse.helper.Helper;
 import org.merdverse.models.Aluno;
 import org.merdverse.models.LoginResult;
 import org.merdverse.models.Professor;
+import org.merdverse.models.Sessao;
+import org.merdverse.models.Treinamento;
 import org.merdverse.models.Usuario;
 
 public class Main {
@@ -39,27 +42,34 @@ public class Main {
         // DAOs
         AlunoDAO alunoDAO = new AlunoDAO();
         ProfessorDAO professorDAO = new ProfessorDAO();
+        TreinamentoDAO treinamentoDAO = new TreinamentoDAO();
         
         // Iniciando um professor no sistema
         LocalDate p1DataNasc = LocalDate.of(1990, 5, 20);
         Professor p1 = new Professor("Felipe Souto", "felipe.souto@fiap.com.br", p1DataNasc);
- 
         professorDAO.create(p1);
+        
+        // Iniciando um aluno no sistema
+        LocalDate a1DataNasc = LocalDate.of(2003, 12, 12);
+        Aluno a1 = new Aluno("Gustavo Veríssimo", "gustavo@fiap.com.br", a1DataNasc);
+        
+        // Iniciando um treinamento no sistema
+        Treinamento treinamento1 = new Treinamento("TR01", "Treinamento Inicial", 100, 60, p1.getEmail());
     	
     	boolean exec = true;
     	
     	while(exec) {
     		boolean logado = false;
-    		System.out.println(AMARELO + "Login." + RESET);
+//    		System.out.println(AMARELO + "Login." + RESET);
 //    		System.out.print("Email: ");
 //    		String email = scanner.next();
 //    		scanner.nextLine(); // Limpar o buffer
 //    		System.out.print("Senha: ");
 //    		String senha = scanner.next();
 //    		scanner.nextLine(); // Limpar o buffer
-    		
+//    		
 //    		LoginResult usr = entrar.entrar(email, senha);
-    		LoginResult usr = entrar.entrar("felipe.souto@fiap.com.br", "130203");
+    		LoginResult usr = entrar.entrar("felipe.souto@fiap.com.br", "200590");
     		System.out.println(usr);
     		if (usr != null) {
     			logado = true;
@@ -69,10 +79,54 @@ public class Main {
     				helper.loading();
     				helper.cleanConsole();
     				System.out.println("Olá, " + usuarioLogado.getNome() + "!");
+    				
     				System.out.println(AMARELO + "Menu: " + RESET);
     				if (usr.getCodigo() == 0) {
     					// Aluno
     					System.out.println("1 - Entrar no treinamento");
+    					System.out.println("9 - Alterar sua senha");
+    					System.out.println("0 - Sair");
+    					System.out.print("Opção: ");
+    					int opcao = scanner.nextInt();
+    					scanner.nextLine();
+    					switch (opcao) {
+    					case 1:
+    						helper.cleanConsole();
+    						System.out.println("Iniciando treinamento...");
+    						helper.loading();
+    						System.out.println(treinamento1.getId() + " " + treinamento1.getNome());
+    						
+    						Sessao sessao = new Sessao(usr.getUsuario().getEmail(), treinamento1);
+    						sessao.iniciarSim(sessao);
+    						
+    						
+    							
+    					case 9: // Alterar senha
+    						helper.cleanConsole();
+    						System.out.println("Alterar sua senha");
+    						System.out.print("Digite sua senha atual: ");
+    						String senhaAntiga = scanner.next();
+    						
+    						while (!senhaAntiga.equals(usr.getUsuario().getSenha())) {
+    							System.out.print("Senha incorreta, digite novamente: ");
+    							senhaAntiga = scanner.next();
+    						}
+    						
+    						System.out.print("Digite sua nova senha: ");
+    						String novaSenha = scanner.next();
+    						alunoDAO.updatePassword(usr.getUsuario().getEmail(), novaSenha);
+    						usr.getUsuario().setSenha(novaSenha);
+    						helper.loading();
+    						break;
+    					case 0: // Deslogar
+    						System.out.println("Saindo...");
+    						helper.loading();
+    						logado = false;
+    					
+    					default:
+    						System.out.println("Opção desconhecida.");
+    						break;
+    					}
     					
     				} else if (usr.getCodigo() == 1) {
     					// Professor
@@ -89,6 +143,33 @@ public class Main {
     					scanner.nextLine();
     					
     					switch (opcao) {
+    					case 1:
+    						helper.cleanConsole();
+    						System.out.println("Listar treinamentos:");
+    						
+    						 List<Treinamento> treinamentos = treinamentoDAO.listarTreinamentos();
+    						 
+    						 if (treinamentos.isEmpty()) {
+     					        System.out.println("Nenhum aluno cadastrado.");
+     					    } else {
+     					        // Títulos das colunas
+     					        System.out.printf(AMARELO + "%-30s | %-30s | %-30s | %-30s | %-15s%n ", "COD", "Nome", "Pontos", "Pontos Minimos" +  "Prof resp" + RESET);
+     					        System.out.println("---------------------------------------------------------------------------------------------");
+     					        
+     					        for (Treinamento treinamento : treinamentos) {
+     					            // Exibe as informações de cada aluno com formatação
+     					            System.out.printf("%-30s | %-30s | %-30s | %-30s | %-15s%n", 
+     					                treinamento.getId(), 
+     					                treinamento.getNome(),
+     					                treinamento.getPontos(),
+     					                treinamento.getPontosMinimo(),
+     					                treinamento.getProfessor()); 
+     					        }
+     					    }
+    						
+    						System.out.println("---------------------------------------------------------------------------------------------");
+    					    System.out.println(AMARELO + "Pressione Enter para voltar ao menu..." + RESET);
+    					    scanner.nextLine(); // Lê a entrada do usuário
     					case 4:
     						helper.cleanConsole();
     						System.out.println("Listar aluno:");
@@ -256,6 +337,9 @@ public class Main {
     						System.out.println("Saindo...");
     						helper.loading();
     						logado = false;
+    					default:
+    						System.out.println("Opção desconhecida.");
+    						break;
     					}
     					
     				}

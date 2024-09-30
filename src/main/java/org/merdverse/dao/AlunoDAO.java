@@ -13,13 +13,12 @@ import java.util.List;
 import org.merdverse.models.Aluno;
 
 public class AlunoDAO {
-    private static final String INSERT_ALUNO = "INSERT INTO aluno (nome, email, pontos, data_nasc, senha) VALUES (?, ?, ?, ?, ?)";
-    private static final String SELECT_ALUNO_BY_EMAIL = "SELECT * FROM aluno WHERE email = ?";
-    private static final String SELECT_ALL_ALUNOS = "SELECT * FROM aluno";
-    private static final String UPDATE_ALUNO = "UPDATE aluno SET nome = ?, email = ?, senha = ?, data_nasc = ?, pontos = ? WHERE email = ?";
-    private static final String DELETE_ALUNO = "DELETE FROM aluno WHERE email = ?";
+    private static final String UPDATE_ALUNO = "UPDATE aluno SET nome_aluno = ?, email_aluno = ?, senha_aluno = ?, data_nasc_aluno = ?, pontos = ? WHERE email_aluno = ?";
+    private static final String DELETE_ALUNO = "DELETE FROM aluno WHERE email_aluno = ?";
     
     public void create(Aluno aluno) {
+    	String INSERT_ALUNO = "INSERT INTO aluno (nome_aluno, email_aluno, pontos, data_nasc_aluno, senha_aluno) VALUES (?, ?, ?, ?, ?)";
+    	
     	try(Connection conn = ConexaoDB.getConnection();
     		PreparedStatement ps = conn.prepareStatement(INSERT_ALUNO)) 
     	{
@@ -40,11 +39,11 @@ public class AlunoDAO {
     }
     
     public void updatePassword(String email, String senha) {
-        String sql = "UPDATE aluno SET senha = ? WHERE email = ?";
+        String UPDATE_SENHA_ALUNO = "UPDATE aluno SET senha_aluno = ? WHERE email_aluno = ?";
 
         // Obtendo a conexão
         try (Connection conn = ConexaoDB.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+             PreparedStatement stmt = conn.prepareStatement(UPDATE_SENHA_ALUNO)) {
 
             stmt.setString(1, senha);
             stmt.setString(2, email);
@@ -57,7 +56,7 @@ public class AlunoDAO {
     
     public Aluno buscarAlunoPorEmail(String emailAluno) {
         Aluno aluno = null;
-        String SELECT_ALUNO_BY_EMAIL = "SELECT * FROM aluno WHERE email = ?"; // Certifique-se de que esta string está correta.
+        String SELECT_ALUNO_BY_EMAIL = "SELECT * FROM aluno WHERE email_aluno = ?"; // Certifique-se de que esta string está correta.
 
         try (Connection conn = ConexaoDB.getConnection();
              PreparedStatement ps = conn.prepareStatement(SELECT_ALUNO_BY_EMAIL)) {
@@ -66,9 +65,9 @@ public class AlunoDAO {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                String nome = rs.getString("nome");
+                String nome = rs.getString("nome_aluno");
                 int pontos = rs.getInt("pontos");
-                Date dataNascSQL = rs.getDate("data_nasc");
+                Date dataNascSQL = rs.getDate("data_nasc_aluno");
                 LocalDate dataNasc = dataNascSQL.toLocalDate();
                 aluno = new Aluno(nome, emailAluno, dataNasc); // Passando o email encontrado
                 aluno.setPontos(pontos);
@@ -81,6 +80,7 @@ public class AlunoDAO {
     }
     
     public List<Aluno> listarAlunos() {
+    	String SELECT_ALL_ALUNOS = "SELECT * FROM aluno";
         List<Aluno> alunos = new ArrayList<>();
         try (Connection conn = ConexaoDB.getConnection();
              Statement stmt = conn.createStatement()) {

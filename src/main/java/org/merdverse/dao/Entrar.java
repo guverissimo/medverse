@@ -10,8 +10,8 @@ import org.merdverse.models.LoginResult;
 import org.merdverse.models.Professor;
 
 public class Entrar {
-    private static final String SELECT_ALUNO = "SELECT * FROM aluno WHERE email = ? AND senha = ?";
-    private static final String SELECT_PROFESSOR = "SELECT * FROM professor WHERE email = ? AND senha = ?";
+    private static final String SELECT_ALUNO = "SELECT * FROM aluno WHERE email_aluno = ? AND senha_aluno = ?";
+    private static final String SELECT_PROFESSOR = "SELECT * FROM professor WHERE email_prof = ? AND senha_prof = ?";
     
     public LoginResult entrar(String email, String senha) {
         try (Connection conn = ConexaoDB.getConnection()) {
@@ -40,9 +40,9 @@ public class Entrar {
             ps.setString(2, senha);
             ResultSet resultSet = ps.executeQuery();
             if (resultSet.next()) {
-                return new Aluno(resultSet.getString("nome"), 
-                                 resultSet.getString("email"),
-                                 resultSet.getDate("data_nasc").toLocalDate());
+                return new Aluno(resultSet.getString("nome_aluno"), 
+                                 resultSet.getString("email_aluno"),
+                                 resultSet.getDate("data_nasc_aluno").toLocalDate());
             }
             return null; // Aluno não encontrado
         }
@@ -54,9 +54,9 @@ public class Entrar {
             ps.setString(2, senha);
             ResultSet resultSetProfessor = ps.executeQuery();
             if (resultSetProfessor.next()) {
-                return new Professor(resultSetProfessor.getString("nome"), 
-                                     resultSetProfessor.getString("email"),
-                                     resultSetProfessor.getDate("data_nasc").toLocalDate());
+                return new Professor(resultSetProfessor.getString("nome_prof"), 
+                                     resultSetProfessor.getString("email_prof"),
+                                     resultSetProfessor.getDate("data_nasc_prof").toLocalDate());
             }
             return null; // Professor não encontrado
         }
