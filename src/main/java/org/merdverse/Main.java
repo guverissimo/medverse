@@ -235,7 +235,7 @@ public class Main {
 					        
 					        alunoDAO.deletarAluno(emailDeletarAluno);
 					        break;
-    					case 9:
+    					case 9: // Alterar senha
     						helper.cleanConsole();
     						System.out.println("Alterar sua senha");
     						System.out.print("Digite sua senha atual: ");
@@ -252,7 +252,7 @@ public class Main {
     						usr.getUsuario().setSenha(novaSenha);
     						helper.loading();
     						break;
-    					case 0:
+    					case 0: // Deslogar
     						System.out.println("Saindo...");
     						helper.loading();
     						logado = false;
@@ -268,7 +268,6 @@ public class Main {
                 exec = false; // Sai do loop
             }
         }
-    		
     		
     	}
     	

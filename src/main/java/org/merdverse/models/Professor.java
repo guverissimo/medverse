@@ -24,13 +24,4 @@ public class Professor extends Usuario{
 		return "a";
 	}
 	
-	public void updatePassword(String email, String senhaAntiga, String senhaNova) {
-		ProfessorDAO professorDAO = new ProfessorDAO();
-		if (this.senha != senhaAntiga) {
-			System.out.println("Senha incorreta"); }
-		
-		professorDAO.updatePassword(email, senhaNova);
-		
-	}
-	
 }
