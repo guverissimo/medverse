@@ -8,8 +8,8 @@ public class ConexaoDB {
 
     // Definindo as informações de conexão com o banco de dados Oracle
     private static final String URL = "jdbc:oracle:thin:@oracle.fiap.com.br:1521:ORCL";
-    private static final String USER = System.getenv("DB_USER"); 
-    private static final String PASSWORD = System.getenv("DB_PASSWORD"); 
+//    private static final String USER = System.getenv("DB_USER"); 
+//    private static final String PASSWORD = System.getenv("DB_PASSWORD"); 
 
     // Registrar o driver JDBC do Oracle
     static {
@@ -24,10 +24,10 @@ public class ConexaoDB {
     public static Connection getConnection() {
         Connection conexao = null;
         try {
-            if (USER == null || PASSWORD == null) {
-                throw new SQLException("Usuário ou senha do banco de dados não configurados.");
-            }
-            conexao = DriverManager.getConnection(URL, USER, PASSWORD);
+//            if (USER == null || PASSWORD == null) {
+//                throw new SQLException("Usuário ou senha do banco de dados não configurados.");
+//            }
+            conexao = DriverManager.getConnection(URL, "RM551244", "130203");
             System.out.println("Conexão com o banco de dados Oracle estabelecida.");
         } catch (SQLException e) {
             System.out.println("Erro ao conectar ao banco de dados: " + e.getMessage());

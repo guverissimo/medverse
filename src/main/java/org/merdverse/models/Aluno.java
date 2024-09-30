@@ -1,13 +1,14 @@
 package org.merdverse.models;
 
+import java.time.LocalDate;
 
 public class Aluno extends Usuario {
     int id;
     private int pontos;
     private int nivel;
 
-    public Aluno(String nome, String email, String senha) {
-        super(nome, email, senha);
+    public Aluno(String nome, String email, LocalDate dataNasc) {
+        super(nome, email, dataNasc);
         this.pontos = 0;
     }
 

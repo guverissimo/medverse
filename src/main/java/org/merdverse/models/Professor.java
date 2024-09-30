@@ -16,4 +16,10 @@ public class Professor extends Usuario{
 		this.id = id;
 	}
 	
+	public String toString() {
+		System.out.println(this.nome);
+		System.out.println(this.email);
+		return "a";
+	}
+	
 }

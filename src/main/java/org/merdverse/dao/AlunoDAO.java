@@ -3,11 +3,12 @@ package org.merdverse.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.time.LocalDate;
 
 import org.merdverse.models.Aluno;
 
 public class AlunoDAO {
-    private static final String INSERT_ALUNO = "INSERT INTO aluno (nome, email, pontos, senha) VALUES (?, ?, ?, ?)";
+    private static final String INSERT_ALUNO = "INSERT INTO aluno (nome, email, pontos, data_nasc, senha) VALUES (?, ?, ?, ?, ?)";
     private static final String SELECT_ALUNO_BY_ID = "SELECT * FROM aluno WHERE id = ?";
     private static final String SELECT_ALL_ALUNOS = "SELECT * FROM aluno";
     private static final String UPDATE_ALUNO = "UPDATE aluno SET nome = ?, email = ?, pontos = ?, nivel = ? WHERE id = ?";
@@ -20,7 +21,9 @@ public class AlunoDAO {
     		ps.setString(1, aluno.getNome());
     		ps.setString(2, aluno.getEmail());
     		ps.setInt(3, aluno.getPontos());
-    		ps.setString(4, aluno.getSenha());
+    		LocalDate dataNascimento = aluno.getDataNasc();
+    		ps.setDate(4, java.sql.Date.valueOf(dataNascimento));
+    		ps.setString(5, aluno.getSenha());
     		ps.executeUpdate();
     		
     		System.out.println("Aluno cadastrado: " + aluno.getNome());

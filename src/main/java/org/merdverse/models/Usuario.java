@@ -37,6 +37,14 @@ public class Usuario {
 		this.senha = senha;
 	}
 	
+	public LocalDate getDataNasc() {
+		return dataNasc;
+	}
+
+	public void setDataNasc(LocalDate dataNasc) {
+		this.dataNasc = dataNasc;
+	}
+
 	public void generateSenha(LocalDate dataNasc) {
 		DateTimeFormatter data = DateTimeFormatter.ofPattern("ddMMyy");
         String senha = dataNasc.format(data);
