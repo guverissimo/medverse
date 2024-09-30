@@ -13,7 +13,7 @@ import org.merdverse.models.Treinamento;
 public class TreinamentoDAO {
 
 	public void create(Treinamento treinamento) {
-		String INSET_TREINAMENTO = "INSTERT INTO treinamento (cod_treinamento, nome_treinamento, pontos_treinamento, pontos_minimo, email_professor) VALUES (?, ?, ?, ?, ?)";
+		String INSET_TREINAMENTO = "INSERT  INTO treinamento (cod_treinamento, nome_treinamento, pontos_treinamento, pontos_minimo, email_professor) VALUES (?, ?, ?, ?, ?)";
 		try (Connection conn = ConexaoDB.getConnection();
 				PreparedStatement ps = conn.prepareStatement(INSET_TREINAMENTO)) {
 			
@@ -22,6 +22,7 @@ public class TreinamentoDAO {
 			ps.setInt(3, treinamento.getPontos());
 			ps.setInt(4, treinamento.getPontosMinimo());
 			ps.setString(5, treinamento.getProfessor());
+			ps.executeUpdate();
 			
 		} catch (SQLException e) {
 			System.out.println("Erro ao criar treinamento: " + e.getMessage());

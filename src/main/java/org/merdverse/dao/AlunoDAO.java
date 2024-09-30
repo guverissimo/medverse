@@ -29,9 +29,7 @@ public class AlunoDAO {
     		ps.setDate(4, java.sql.Date.valueOf(dataNascimento));
     		ps.setString(5, aluno.getSenha());
     		ps.executeUpdate();
-    		
-    		System.out.println("Aluno cadastrado: " + aluno.getNome());
-    		
+ 
     	} catch (SQLException e) {
     		System.out.println("Cannot create Aluno: " + e.getMessage());
     	}
