@@ -29,4 +29,22 @@ public class ProfessorDAO {
 			System.out.println("Erro ao criar professor: " + e.getMessage());
 		}
 	}
+	
+    public void updatePassword(String email, String senha) {
+        String sql = "UPDATE professor SET senha = ? WHERE email = ?";
+
+        // Obtendo a conexão
+        try (Connection conn = ConexaoDB.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, senha);
+            stmt.setString(2, email);
+            stmt.executeUpdate();
+            
+            System.out.println("Senha atualizado com sucesso!");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
 }

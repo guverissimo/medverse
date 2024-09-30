@@ -6,6 +6,7 @@ import java.util.Scanner;
 import org.merdverse.dao.AlunoDAO;
 import org.merdverse.dao.Entrar;
 import org.merdverse.dao.ProfessorDAO;
+import org.merdverse.helper.Helper;
 import org.merdverse.models.LoginResult;
 import org.merdverse.models.Professor;
 import org.merdverse.models.Usuario;
@@ -31,6 +32,7 @@ public class Main {
         
         Entrar entrar = new Entrar();
         Scanner scanner = new Scanner(System.in);
+        Helper helper = new Helper();
         
         // DAOs
         AlunoDAO alunoDAO = new AlunoDAO();
@@ -47,55 +49,61 @@ public class Main {
     	while(exec) {
     		boolean logado = false;
     		System.out.println(AMARELO + "Login." + RESET);
-    		System.out.println("Email: ");
+    		System.out.print("Email: ");
     		String email = scanner.next();
     		scanner.nextLine(); // Limpar o buffer
-    		System.out.println("Senha: ");
+    		System.out.print("Senha: ");
     		String senha = scanner.next();
     		scanner.nextLine(); // Limpar o buffer
     		
     		LoginResult usr = entrar.entrar(email, senha);
     		System.out.println(usr);
     		if (usr != null) {
-                Usuario usuarioLogado = usr.getUsuario();
-                System.out.println("Bem-vindo, " + usuarioLogado.getNome() + "!");
-
-                // Verifica se o usuário é um aluno ou professor com base no código
-                if (usr.getCodigo() == 0) {
-                    System.out.println("Você está logado como Aluno.");
-                } else if (usr.getCodigo() == 1) {
-                    System.out.println("Você está logado como Professor.");
-                }
-
-                exec = false; // Sai do loop, usuário logado com sucesso
+    			logado = true;
+    			
+    			while (logado) {
+    				Usuario usuarioLogado = usr.getUsuario();
+    				helper.cleanConsole();
+    				System.out.println("Olá, " + usuarioLogado.getNome() + "!");
+    				System.out.println(AMARELO + "Menu: " + RESET);
+    				if (usr.getCodigo() == 0) {
+    					// Aluno
+    					System.out.println("1 - Entrar no treinamento");
+    					
+    				} else if (usr.getCodigo() == 1) {
+    					// Professor
+    					System.out.println("9 - Alterar sua senha");
+    					System.out.print("Opção: ");
+    					int opcao = scanner.nextInt();
+    					scanner.nextLine();
+    					
+    					switch (opcao) {
+    					case 9:
+    						System.out.println("Alterar sua senha");
+    						System.out.print("Digite sua senha atual: ");
+    						String senhaAntiga = scanner.next();
+    						
+    						while (!senhaAntiga.equals(usr.getUsuario().getSenha())) {
+    							System.out.print("Senha incorreta, digite novamente: ");
+    							senhaAntiga = scanner.next();
+    						}
+    						
+    						System.out.print("Digite sua nova senha: ");
+    						String novaSenha = scanner.next();
+    						professorDAO.updatePassword(usr.getUsuario().getEmail(), novaSenha);
+    						usr.getUsuario().setSenha(novaSenha);
+    						break;
+    					case 0:
+    						System.out.println("Saindo...");
+    						logado = false;
+    					}
+    					
+    				}
+    			}
             } else {
                 System.out.println("E-mail ou senha inválidos.");
             }
 
-//            switch (usr) {
-//                case (usr.):
-//                	// Aluno
-//                    System.out.println("Você está logado como Aluno.");
-//                    logado = true; // Define que o usuário está logado
-//                    break;
-//                case 1:
-//                    // Professor
-//                	System.out.println("Bem-vindo: " + );
-//                    logado = true; // Define que o usuário está logado
-//                    break;
-//                case 2:
-//                	// Usuário não encontrado
-//                    System.out.println("E-mail ou senha inválidos.");
-//                    break;
-//                case -1:
-//                	// Erro
-//                    System.out.println("Erro ao realizar o login. Tente novamente.");
-//                    break;
-//                default:
-//                    System.out.println("Opção desconhecida.");
-//            }
-
-            // Se o usuário estiver logado, pode sair do loop ou realizar outras ações
             if (logado) {
                 exec = false; // Sai do loop
             }

@@ -7,6 +7,8 @@ import java.time.LocalDate;
 
 import org.merdverse.models.Aluno;
 
+import br.com.fiap.challenge.dao.ConexaoDB;
+
 public class AlunoDAO {
     private static final String INSERT_ALUNO = "INSERT INTO aluno (nome, email, pontos, data_nasc, senha) VALUES (?, ?, ?, ?, ?)";
     private static final String SELECT_ALUNO_BY_ID = "SELECT * FROM aluno WHERE id = ?";
@@ -33,5 +35,22 @@ public class AlunoDAO {
     	}
     	
     }
+    
+    public void updatePassword(String email, String senha) {
+        String sql = "UPDATE aluno SET senha = ? WHERE email = ?";
+
+        // Obtendo a conexão
+        try (Connection conn = ConexaoDB.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, senha);
+            stmt.setString(2, email);
+
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
 
 }

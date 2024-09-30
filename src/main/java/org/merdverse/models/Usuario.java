@@ -16,6 +16,7 @@ public class Usuario {
 		this.generateSenha(dataNasc);
 	}
 	
+	
 	public String getNome() {
 		return nome;
 	}
