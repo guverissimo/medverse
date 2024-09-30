@@ -7,6 +7,7 @@ import org.merdverse.dao.AlunoDAO;
 import org.merdverse.dao.Entrar;
 import org.merdverse.dao.ProfessorDAO;
 import org.merdverse.helper.Helper;
+import org.merdverse.models.Aluno;
 import org.merdverse.models.LoginResult;
 import org.merdverse.models.Professor;
 import org.merdverse.models.Usuario;
@@ -63,6 +64,7 @@ public class Main {
     			
     			while (logado) {
     				Usuario usuarioLogado = usr.getUsuario();
+    				helper.loading();
     				helper.cleanConsole();
     				System.out.println("Olá, " + usuarioLogado.getNome() + "!");
     				System.out.println(AMARELO + "Menu: " + RESET);
@@ -72,12 +74,32 @@ public class Main {
     					
     				} else if (usr.getCodigo() == 1) {
     					// Professor
+    					System.out.println("8 - Cadastrar aluno");
     					System.out.println("9 - Alterar sua senha");
+    					System.out.println("0 - Sair");
     					System.out.print("Opção: ");
     					int opcao = scanner.nextInt();
     					scanner.nextLine();
     					
     					switch (opcao) {
+    					case 8:
+    						System.out.println("Cadastrar aluno");
+    						
+    						System.out.print("Nome: ");
+					        String nomeAluno = scanner.nextLine();
+					        
+					        System.out.print("Email: ");
+					        String emailAluno = scanner.nextLine();
+					        
+					        System.out.print("Data de Nascimento (YYYY-MM-DD): ");
+					        String dataNascStr = scanner.nextLine();
+					        LocalDate dataNascAluno = LocalDate.parse(dataNascStr);
+					        
+					        Aluno aln = new Aluno(nomeAluno, emailAluno, dataNascAluno);
+					        alunoDAO.create(aln);
+					        helper.loading();
+					        break;
+    					
     					case 9:
     						System.out.println("Alterar sua senha");
     						System.out.print("Digite sua senha atual: ");
@@ -92,9 +114,11 @@ public class Main {
     						String novaSenha = scanner.next();
     						professorDAO.updatePassword(usr.getUsuario().getEmail(), novaSenha);
     						usr.getUsuario().setSenha(novaSenha);
+    						helper.loading();
     						break;
     					case 0:
     						System.out.println("Saindo...");
+    						helper.loading();
     						logado = false;
     					}
     					
