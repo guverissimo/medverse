@@ -1,5 +1,6 @@
 package org.merdverse.helper;
 
+import java.security.SecureRandom;
 import java.util.Scanner;
 
 public class Helper {
@@ -37,5 +38,20 @@ public class Helper {
 	            }
 	        }
 
+	    }
+	 
+	 public String gerarString() {
+		 	String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+		    SecureRandom random = new SecureRandom();
+	        int length = 6;  // Definindo o tamanho da string
+	        StringBuilder sb = new StringBuilder(length);
+
+	        // Gerando a string aleatória
+	        for (int i = 0; i < length; i++) {
+	            int randomIndex = random.nextInt(CHARACTERS.length());
+	            sb.append(CHARACTERS.charAt(randomIndex));
+	        }
+
+	        return sb.toString();
 	    }
 }

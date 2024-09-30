@@ -23,7 +23,7 @@ public class SessaoDAO {
 	}
 	
 	public void atualizarAtivoSessao(Sessao sessao) {
-		String UPDATE_ATIVO_SESSAO = "UDPADE sessao SET ativo = ? WHERE cod_sessao = ?";
+		String UPDATE_ATIVO_SESSAO = "UPDATE sessao SET ativo = ? WHERE cod_sessao = ?";
 		try (Connection conn = ConexaoDB.getConnection();
 	             PreparedStatement stmt = conn.prepareStatement(UPDATE_ATIVO_SESSAO)) {
 				stmt.setInt(1, sessao.isAtivo());
@@ -33,4 +33,5 @@ public class SessaoDAO {
 	            e.printStackTrace();
 	        }
 	}
+	
 }

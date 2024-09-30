@@ -23,10 +23,8 @@ public class TreinamentoDAO {
 			ps.setInt(4, treinamento.getPontosMinimo());
 			ps.setString(5, treinamento.getProfessor());
 			
-			System.out.println("Treinamento criado com sucesso!");
-			
 		} catch (SQLException e) {
-			System.out.println("Erro ao criar aluno: " + e.getMessage());
+			System.out.println("Erro ao criar treinamento: " + e.getMessage());
 		}
 	}
 	
@@ -49,7 +47,7 @@ public class TreinamentoDAO {
             }
 
         } catch (SQLException e) {
-            System.out.println("Erro ao listar alunos: " + e.getMessage());
+            System.out.println("Erro ao listar treinamento: " + e.getMessage());
         }
         return treinamentos;
     }

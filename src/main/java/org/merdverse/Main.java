@@ -7,11 +7,13 @@ import java.util.Scanner;
 import org.merdverse.dao.AlunoDAO;
 import org.merdverse.dao.Entrar;
 import org.merdverse.dao.ProfessorDAO;
+import org.merdverse.dao.RelatorioDAO;
 import org.merdverse.dao.TreinamentoDAO;
 import org.merdverse.helper.Helper;
 import org.merdverse.models.Aluno;
 import org.merdverse.models.LoginResult;
 import org.merdverse.models.Professor;
+import org.merdverse.models.Relatorio;
 import org.merdverse.models.Sessao;
 import org.merdverse.models.Treinamento;
 import org.merdverse.models.Usuario;
@@ -43,33 +45,37 @@ public class Main {
         AlunoDAO alunoDAO = new AlunoDAO();
         ProfessorDAO professorDAO = new ProfessorDAO();
         TreinamentoDAO treinamentoDAO = new TreinamentoDAO();
+        RelatorioDAO relatorioDAO = new RelatorioDAO();
+
         
         // Iniciando um professor no sistema
         LocalDate p1DataNasc = LocalDate.of(1990, 5, 20);
         Professor p1 = new Professor("Felipe Souto", "felipe.souto@fiap.com.br", p1DataNasc);
         professorDAO.create(p1);
-        
+
         // Iniciando um aluno no sistema
         LocalDate a1DataNasc = LocalDate.of(2003, 12, 12);
         Aluno a1 = new Aluno("Gustavo Veríssimo", "gustavo@fiap.com.br", a1DataNasc);
-        
+        alunoDAO.create(a1);
+
         // Iniciando um treinamento no sistema
         Treinamento treinamento1 = new Treinamento("TR01", "Treinamento Inicial", 100, 60, p1.getEmail());
-    	
+        treinamentoDAO.create(treinamento1);
+
     	boolean exec = true;
     	
     	while(exec) {
     		boolean logado = false;
-//    		System.out.println(AMARELO + "Login." + RESET);
-//    		System.out.print("Email: ");
-//    		String email = scanner.next();
-//    		scanner.nextLine(); // Limpar o buffer
-//    		System.out.print("Senha: ");
-//    		String senha = scanner.next();
-//    		scanner.nextLine(); // Limpar o buffer
-//    		
-//    		LoginResult usr = entrar.entrar(email, senha);
-    		LoginResult usr = entrar.entrar("felipe.souto@fiap.com.br", "200590");
+    		System.out.println(AMARELO + "Login." + RESET);
+    		System.out.print("Email: ");
+    		String email = scanner.next();
+    		scanner.nextLine(); // Limpar o buffer
+    		System.out.print("Senha: ");
+    		String senha = scanner.next();
+    		scanner.nextLine(); // Limpar o buffer
+    		
+    		LoginResult usr = entrar.entrar(email, senha);
+//    		LoginResult usr = entrar.entrar("gustavo@fiap.com.br", "121203");
     		System.out.println(usr);
     		if (usr != null) {
     			logado = true;
@@ -92,15 +98,20 @@ public class Main {
     					switch (opcao) {
     					case 1:
     						helper.cleanConsole();
-    						System.out.println("Iniciando treinamento...");
     						helper.loading();
     						System.out.println(treinamento1.getId() + " " + treinamento1.getNome());
     						
     						Sessao sessao = new Sessao(usr.getUsuario().getEmail(), treinamento1);
     						sessao.iniciarSim(sessao);
     						
+    						System.out.println("---------------------------------------------------------------------------------------------");
+    					    System.out.println(AMARELO + "Pressione Enter para gerar seu relatório" + RESET);
+    					    scanner.nextLine(); // Lê a entrada do usuário
     						
-    							
+    						Relatorio relatorio = new Relatorio(usr.getUsuario().getEmail(), treinamento1.getId(), sessao.getPontos(), sessao.getAprovado());
+    						relatorioDAO.create(relatorio);
+    						
+    						break;
     					case 9: // Alterar senha
     						helper.cleanConsole();
     						System.out.println("Alterar sua senha");
@@ -150,7 +161,7 @@ public class Main {
     						 List<Treinamento> treinamentos = treinamentoDAO.listarTreinamentos();
     						 
     						 if (treinamentos.isEmpty()) {
-     					        System.out.println("Nenhum aluno cadastrado.");
+     					        System.out.println("Nenhum treinamento cadastrado.");
      					    } else {
      					        // Títulos das colunas
      					        System.out.printf(AMARELO + "%-30s | %-30s | %-30s | %-30s | %-15s%n ", "COD", "Nome", "Pontos", "Pontos Minimos" +  "Prof resp" + RESET);
@@ -170,6 +181,7 @@ public class Main {
     						System.out.println("---------------------------------------------------------------------------------------------");
     					    System.out.println(AMARELO + "Pressione Enter para voltar ao menu..." + RESET);
     					    scanner.nextLine(); // Lê a entrada do usuário
+    					    break;
     					case 4:
     						helper.cleanConsole();
     						System.out.println("Listar aluno:");

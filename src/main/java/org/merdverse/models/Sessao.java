@@ -1,5 +1,6 @@
 package org.merdverse.models;
 
+import org.merdverse.dao.RelatorioDAO;
 import org.merdverse.dao.SessaoDAO;
 import org.merdverse.helper.Helper;
 
@@ -9,15 +10,17 @@ public class Sessao {
 	private Treinamento treinamento;
 	private int pontos;
 	private int ativo;
+	private int aprovado;
 	
 	public Sessao(String aluno_email, Treinamento treinamento) {
 		this.aluno_email = aluno_email;
 		this.treinamento = treinamento;
+		aprovado = 0;
 	}
 	
 	Helper hp = new Helper();
 	SessaoDAO sessaoDAO = new SessaoDAO();
-	
+	RelatorioDAO relatorioDAO = new RelatorioDAO();
 	public String getAluno_email() {
 		return aluno_email;
 	}
@@ -43,7 +46,14 @@ public class Sessao {
 	public void setId(String id) {
 		this.id = id;
 	}
+	
+	public int getAprovado() {
+		return aprovado;
+	}
 
+	public void setAprovado(int aprovado) {
+		this.aprovado = aprovado;
+	}
 	public int getPontos() {
 		return pontos;
 	}
@@ -55,7 +65,7 @@ public class Sessao {
 	public void iniciarSim(Sessao sessao) {
 		this.ativo = 1;
 		System.out.println("Sessão de treinamento iniciada.");
-		
+		sessaoDAO.atualizarAtivoSessao(sessao);
 		sessaoDAO.create(sessao);
 		// Gerando um numero aleátorio para simulação
 		int pontosAleatorio = (int) (Math.random() * treinamento.getPontosMinimo() + 1 );
@@ -71,11 +81,14 @@ public class Sessao {
 		if (pontos >= treinamento.getPontosMinimo()) {
 			System.out.println("Aprovado");
 			setAtivo(0);
+			setAprovado(1);
+			sessaoDAO.atualizarAtivoSessao(sessao);
 			
 		} else {
 			System.out.println("Você não atingiu a pontuação necessária para ser aprovado!");
 			System.out.println("Reiniciando sessão...");
 			setAtivo(0);
+			setAprovado(0);
 			hp.loading();
 		}
 	}
