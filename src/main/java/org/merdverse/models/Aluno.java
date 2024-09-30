@@ -1,6 +1,7 @@
 package org.merdverse.models;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class Aluno extends Usuario {
     int id;
@@ -26,6 +27,17 @@ public class Aluno extends Usuario {
 
     public int getId() {
         return id;
+    }
+    
+    @Override
+    public String toString() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return String.format("%-30s | %-30s | %-30s | %-15s | %-10d", 
+                             nome, 
+                             email, 
+                             senha,
+                             dataNasc.format(formatter), 
+                             pontos);
     }
 }
 

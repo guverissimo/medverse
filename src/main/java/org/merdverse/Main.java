@@ -1,6 +1,7 @@
 package org.merdverse;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Scanner;
 
 import org.merdverse.dao.AlunoDAO;
@@ -50,14 +51,15 @@ public class Main {
     	while(exec) {
     		boolean logado = false;
     		System.out.println(AMARELO + "Login." + RESET);
-    		System.out.print("Email: ");
-    		String email = scanner.next();
-    		scanner.nextLine(); // Limpar o buffer
-    		System.out.print("Senha: ");
-    		String senha = scanner.next();
-    		scanner.nextLine(); // Limpar o buffer
+//    		System.out.print("Email: ");
+//    		String email = scanner.next();
+//    		scanner.nextLine(); // Limpar o buffer
+//    		System.out.print("Senha: ");
+//    		String senha = scanner.next();
+//    		scanner.nextLine(); // Limpar o buffer
     		
-    		LoginResult usr = entrar.entrar(email, senha);
+//    		LoginResult usr = entrar.entrar(email, senha);
+    		LoginResult usr = entrar.entrar("felipe.souto@fiap.com.br", "130203");
     		System.out.println(usr);
     		if (usr != null) {
     			logado = true;
@@ -74,7 +76,12 @@ public class Main {
     					
     				} else if (usr.getCodigo() == 1) {
     					// Professor
-    					System.out.println("8 - Cadastrar aluno");
+    					System.out.println("1 - Listar treinamentos");
+    					System.out.println("4 - Listar um aluno");
+    					System.out.println("5 - Listar todos os alunos");
+    					System.out.println("6 - Cadastrar aluno");
+    					System.out.println("7 - Alterar cadastro de um aluno");
+    					System.out.println("8 - Deletar aluno");
     					System.out.println("9 - Alterar sua senha");
     					System.out.println("0 - Sair");
     					System.out.print("Opção: ");
@@ -82,25 +89,136 @@ public class Main {
     					scanner.nextLine();
     					
     					switch (opcao) {
-    					case 8:
+    					case 4:
+    						helper.cleanConsole();
+    						System.out.println("Listar aluno:");
+    						
+    						System.out.print("Digite o email do aluno: ");
+					        String emailListarAluno = scanner.nextLine();
+					        
+					        Aluno alunoListado = alunoDAO.buscarAlunoPorEmail(emailListarAluno);
+					        if (alunoListado == null) {
+					        	System.out.println("Nenhum aluno cadastrado.");
+	    					    System.out.println("---------------------------------------------------------------------------------------------");
+	    					    System.out.println(AMARELO + "Pressione Enter para voltar ao menu..." + RESET);
+	    					    scanner.nextLine(); // Lê a entrada do usuário
+					        	break;
+					        }
+					        System.out.printf(AMARELO + "%-30s | %-30s | %-15s | %-10s%n", "Nome", "Email", "Data de Nascimento", "Pontos" + RESET);
+					        System.out.println(alunoListado.toString());
+    						
+    					    System.out.println("---------------------------------------------------------------------------------------------");
+    					    System.out.println(AMARELO + "Pressione Enter para voltar ao menu..." + RESET);
+    					    scanner.nextLine(); // Lê a entrada do usuário
+    					case 5:
+    						helper.cleanConsole();
+    					    System.out.println("Listar alunos:");
+    					    List<Aluno> alunos = alunoDAO.listarAlunos(); // Atribuindo a lista retornada à variável alunos
+
+    					    if (alunos.isEmpty()) {
+    					        System.out.println("Nenhum aluno cadastrado.");
+    					    } else {
+    					        // Títulos das colunas
+    					        System.out.printf(AMARELO + "%-30s | %-30s | %-15s | %-10s%n", "Nome", "Email", "Data de Nascimento", "Pontos" + RESET);
+    					        System.out.println("---------------------------------------------------------------------------------------------");
+    					        
+    					        for (Aluno aluno : alunos) {
+    					            // Exibe as informações de cada aluno com formatação
+    					            System.out.printf("%-30s | %-30s | %-15s | %-10d%n", 
+    					                aluno.getNome(), 
+    					                aluno.getEmail(), 
+    					                aluno.getDataNasc(), 
+    					                aluno.getPontos());
+    					        }
+    					    }
+
+    					    System.out.println("---------------------------------------------------------------------------------------------");
+    					    System.out.println(AMARELO + "Pressione Enter para voltar ao menu..." + RESET);
+    					    scanner.nextLine(); // Lê a entrada do usuário
+    					    break;
+    					case 6:
+    						helper.cleanConsole();
     						System.out.println("Cadastrar aluno");
     						
     						System.out.print("Nome: ");
-					        String nomeAluno = scanner.nextLine();
+					        String nomeAlunoCadastrar = scanner.nextLine();
 					        
 					        System.out.print("Email: ");
-					        String emailAluno = scanner.nextLine();
+					        String emailAlunoCadastrar = scanner.nextLine();
 					        
 					        System.out.print("Data de Nascimento (YYYY-MM-DD): ");
 					        String dataNascStr = scanner.nextLine();
-					        LocalDate dataNascAluno = LocalDate.parse(dataNascStr);
+					        LocalDate dataNascAlunoCadastrar = LocalDate.parse(dataNascStr);
 					        
-					        Aluno aln = new Aluno(nomeAluno, emailAluno, dataNascAluno);
-					        alunoDAO.create(aln);
+					        Aluno alnCadastrar = new Aluno(nomeAlunoCadastrar, emailAlunoCadastrar, dataNascAlunoCadastrar);
+					        alunoDAO.create(alnCadastrar);
 					        helper.loading();
 					        break;
     					
+    					case 7:
+    						helper.cleanConsole();
+    						System.out.println("Alterar cadastro de um aluno");
+    						
+    						System.out.print("Digite o email do aluno: ");
+					        String emailAlunoAtualizar = scanner.nextLine();
+					        
+					        Aluno alnAtualizar = alunoDAO.buscarAlunoPorEmail(emailAlunoAtualizar);
+
+					        if (alnAtualizar == null) {
+					        	System.out.println("Nenhum aluno cadastrado.");
+					        	break;
+					        }
+					        helper.cleanConsole();
+					        
+					        String oldMail = alnAtualizar.getEmail();
+					     // Atualizar Nome
+					        System.out.println("Nome atual: " + AMARELO + alnAtualizar.getNome() + RESET);
+					        boolean atualizarNome = helper.opcao("Alterar nome? (S/N): ");
+					        if (atualizarNome) {
+					        	System.out.print("Nome: ");
+					        	String novoNome = scanner.nextLine();
+					        	alnAtualizar.setNome(novoNome);
+					        }
+					        
+					        // Atualizar Email
+					        System.out.println("Email atual: " + AMARELO + alnAtualizar.getEmail()  + RESET);
+					        boolean atualizarEmail = helper.opcao("Alterar email? (S/N): ");
+					        if (atualizarEmail) {
+					        	
+					        	System.out.print("Email: ");
+					        	String novoEmail = scanner.nextLine();
+					        	alnAtualizar.setEmail(novoEmail);
+					        }
+					        
+					        // Atualizar Data de Nascimento
+					        System.out.println("Data de nascimento atual: " + AMARELO + alnAtualizar.getDataNasc() + RESET);
+					        boolean atualizarNascimento = helper.opcao("Alterar data de nascimento? (S/N): ");
+					        if (atualizarNascimento) {
+					        	 System.out.print("Data de Nascimento (YYYY-MM-DD): ");
+							     String atualizarDataNasc = scanner.nextLine();
+							     try {
+							    	 LocalDate dataNascAlunoAtualizar = LocalDate.parse(atualizarDataNasc);
+							            alnAtualizar.setDataNasc(dataNascAlunoAtualizar); 
+							        } catch (Exception e) {
+							            System.out.println("Data inválida. A data não foi alterada.");
+							        }
+					        }
+					        
+						    // Atualizar Senha
+					        System.out.println("Senha atual: " + AMARELO + alnAtualizar.getSenha() + RESET);
+					        boolean atualizarSenha = helper.opcao("Alterar senha? (S/N): ");
+					        if (atualizarSenha) {
+					        	System.out.print("Email: ");
+					        	String novaSenha = scanner.nextLine();
+					        	alnAtualizar.setSenha(novaSenha);
+					        }
+					        
+					        System.out.println(alnAtualizar.toString());
+					        alunoDAO.atualizarAluno(oldMail, alnAtualizar);
+					        
+    						break;
     					case 9:
+    						helper.cleanConsole();
     						System.out.println("Alterar sua senha");
     						System.out.print("Digite sua senha atual: ");
     						String senhaAntiga = scanner.next();

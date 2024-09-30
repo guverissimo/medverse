@@ -16,6 +16,21 @@ public class Usuario {
 		this.generateSenha(dataNasc);
 	}
 	
+    public Usuario(String nome, String email, LocalDate dataNasc, String senha) {
+        this.nome = nome;
+        this.email = email;
+        this.dataNasc = dataNasc;
+        this.senha = senha; // Define a senha se fornecida
+    }
+	
+    public String toString() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return String.format("%-30s | %-30s | %-30s | %-15s", 
+                             nome, 
+                             email, 
+                             senha,
+                             dataNasc.format(formatter));
+    }
 	
 	public String getNome() {
 		return nome;

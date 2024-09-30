@@ -1,19 +1,22 @@
 package org.merdverse.dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.merdverse.models.Aluno;
 
-import br.com.fiap.challenge.dao.ConexaoDB;
-
 public class AlunoDAO {
     private static final String INSERT_ALUNO = "INSERT INTO aluno (nome, email, pontos, data_nasc, senha) VALUES (?, ?, ?, ?, ?)";
-    private static final String SELECT_ALUNO_BY_ID = "SELECT * FROM aluno WHERE id = ?";
+    private static final String SELECT_ALUNO_BY_EMAIL = "SELECT * FROM aluno WHERE email = ?";
     private static final String SELECT_ALL_ALUNOS = "SELECT * FROM aluno";
-    private static final String UPDATE_ALUNO = "UPDATE aluno SET nome = ?, email = ?, pontos = ?, nivel = ? WHERE id = ?";
+    private static final String UPDATE_ALUNO = "UPDATE aluno SET nome = ?, email = ?, senha = ?, data_nasc = ?, pontos = ? WHERE email = ?";
     private static final String DELETE_ALUNO = "DELETE FROM aluno WHERE id = ?";
     
     public void create(Aluno aluno) {
@@ -52,5 +55,71 @@ public class AlunoDAO {
         }
     }
     
+    public Aluno buscarAlunoPorEmail(String emailAluno) {
+        Aluno aluno = null;
+        String SELECT_ALUNO_BY_EMAIL = "SELECT * FROM aluno WHERE email = ?"; // Certifique-se de que esta string está correta.
+
+        try (Connection conn = ConexaoDB.getConnection();
+             PreparedStatement ps = conn.prepareStatement(SELECT_ALUNO_BY_EMAIL)) {
+
+            ps.setString(1, emailAluno);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                String nome = rs.getString("nome");
+                int pontos = rs.getInt("pontos");
+                Date dataNascSQL = rs.getDate("data_nasc");
+                LocalDate dataNasc = dataNascSQL.toLocalDate();
+                aluno = new Aluno(nome, emailAluno, dataNasc); // Passando o email encontrado
+                aluno.setPontos(pontos);
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Erro ao buscar aluno: " + e.getMessage());
+        }
+        return aluno; // Retorna o aluno encontrado ou null
+    }
+    
+    public List<Aluno> listarAlunos() {
+        List<Aluno> alunos = new ArrayList<>();
+        try (Connection conn = ConexaoDB.getConnection();
+             Statement stmt = conn.createStatement()) {
+
+            ResultSet rs = stmt.executeQuery(SELECT_ALL_ALUNOS);
+
+            while (rs.next()) {
+                String nome = rs.getString("nome");
+                String email = rs.getString("email");
+                int pontos = rs.getInt("pontos");
+                Date dataNascSQL = rs.getDate("data_nasc");
+                LocalDate dataNasc = dataNascSQL.toLocalDate();
+                Aluno aluno = new Aluno(nome, email, dataNasc);
+                aluno.setPontos(pontos);
+                alunos.add(aluno);
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Erro ao listar alunos: " + e.getMessage());
+        }
+        return alunos;
+    }
+    
+    public void atualizarAluno(String email, Aluno aluno) {
+        // Obtendo a conexão
+        try (Connection conn = ConexaoDB.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(UPDATE_ALUNO)) {
+
+            stmt.setString(1, aluno.getNome());
+            stmt.setString(2, aluno.getEmail());
+            stmt.setString(3, aluno.getSenha());
+            stmt.setDate(4, Date.valueOf(aluno.getDataNasc())); // Certifique-se de que a data está no formato correto
+            stmt.setInt(5, aluno.getPontos());
+            stmt.setString(6, email); // Use o email aqui para identificar qual aluno atualizar
+
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
 }
