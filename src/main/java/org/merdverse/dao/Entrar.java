@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Entrar {
-    private static final String SELECT_ALUNO = "SELECT * FROM alunos WHERE email = ? AND senha = ?";
+    private static final String SELECT_ALUNO = "SELECT * FROM aluno WHERE email = ? AND senha = ?";
     
     public int entrar(String email, String senha) {
         ResultSet resultSet = null;
@@ -22,7 +22,7 @@ public class Entrar {
                 return 0; // Aluno encontrado
             } else {
                 // Se não for aluno, verificar se é professor
-                String queryProfessor = "SELECT * FROM professores WHERE email = ? AND senha = ?";
+                String queryProfessor = "SELECT * FROM professor WHERE email = ? AND senha = ?";
                 PreparedStatement psProfessor = conn.prepareStatement(queryProfessor);
                 psProfessor.setString(1, email);
                 psProfessor.setString(2, senha);

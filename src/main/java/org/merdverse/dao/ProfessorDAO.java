@@ -25,7 +25,7 @@ public class ProfessorDAO {
     		ps.setString(4, professor.getSenha());
     		ps.executeUpdate();
 			
-		}catch (SQLException e) {
+		} catch (SQLException e) {
 			System.out.println("Erro ao criar professor: " + e.getMessage());
 		}
 	}

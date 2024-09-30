@@ -5,7 +5,6 @@ import java.time.LocalDate;
 public class Aluno extends Usuario {
     int id;
     private int pontos;
-    private int nivel;
 
     public Aluno(String nome, String email, LocalDate dataNasc) {
         super(nome, email, dataNasc);
@@ -24,13 +23,6 @@ public class Aluno extends Usuario {
         this.pontos = pontos;
     }
 
-    public int getNivel() {
-        return nivel;
-    }
-
-    public void setNivel(int nivel) {
-        this.nivel = nivel;
-    }
 
     public int getId() {
         return id;
